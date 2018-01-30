@@ -2,7 +2,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const colors = require('colors');
 const path = require('path');
-const pug = require('pug');
 const cors = require('cors');
 const fs = require('fs');
 const jsonfile = require("jsonfile");
