@@ -44,9 +44,9 @@ info = {
     ]
 };
 //JSON THINGS:
-
-
-
+let statusFile = './status.json';
+let epostFile = './status/epost.json';
+//statusFile = JSON.parse(statusFile);
 
 
 //ROUTES:
@@ -55,8 +55,14 @@ app.post('/state/:srv', (req, res) => {
     if(stateToChange === "epost"){
         console.log(colors.green(req.ip + " Set "+stateToChange + " To: "))
         console.log(req.body.state + "\n" + req.body.color)
+        let objectOne = req.body.state;
+        jsonfile.writeFileSync(statusFile, objectOne, (err) => {
+            console.error(err);
+        });
+        /*
         status.epost.state = req.body.state;
         status.epost.color = req.body.color;
+        */
     }
     if(stateToChange === "intern"){
         console.log(colors.green(req.ip + " Set "+stateToChange + " To: "))
@@ -111,8 +117,7 @@ app.delete('/api/info/:del', (req, res) => {
 });
 
 app.get('/api', (req, res) => {
-    let status = fs.readFileSync('./status.json', 'utf8');
-    status = JSON.parse(status);
+    status = jsonfile.readFileSync(statusFile);
     console.log('API Fetch from: ' + req.ip);
     res.json(status);
 });
