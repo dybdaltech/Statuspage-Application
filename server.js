@@ -5,6 +5,9 @@ const path = require('path');
 const cors = require('cors');
 const fs = require('fs');
 const jsonfile = require("jsonfile");
+const mongoose = require('mongoose');
+var InfoDB = require('./models/Info');
+var Services = require('./models/status');
 
 
 const app = express();
@@ -47,9 +50,17 @@ let statusFile = './status.json';
 let epostFile = './status/epost.json';
 //statusFile = JSON.parse(statusFile);
 
+//MONGODB THINGS
+mongoose.connect('mongodb://172.19.20.69:27017/statuspage');
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'Database connection error'));
 
+db.once('open', (callback) => {
+    console.log(colors.green('Database connection success'));
+});
 //ROUTES:
 app.post('/state/:srv', (req, res) => {
+    //THIS IS VERY BUGGED, DO NOT USE THIS
     var stateToChange = req.params.srv;
     if(stateToChange === "epost"){
         console.log(colors.green(req.ip + " Set "+stateToChange + " To: "))
@@ -85,10 +96,29 @@ app.post('/state/:srv', (req, res) => {
 
 
 app.post('/info/create', (req, res) => {
-    console.log(req.body);
-    info.info = true;
-    info.infoTabs.push({title:req.body.infoTitle, text:req.body.infoText, color:req.body.infoColor})
-    console.log(info.infoTabs);
+    console.log(colors.yellow("INFO CREATE"));
+    let db = req.db;
+
+    let info_title = req.body.infoTitle;
+    let info_description= req.body.infoText;
+    let info_color = req.body.infoColor;
+    let newInfo = new InfoDB({
+        title: info_title,
+        Text: info_description,
+        Color: info_color,
+        Date: "null"
+    });
+
+    newInfo.save((err) => {
+        if (err) {
+            console.error(err);
+        }
+        res.send({
+            success: true,
+            message: "Infobox saved succesfully!"
+        });
+    });
+
 })
 
 app.get('/', (req, res) => {
@@ -117,14 +147,30 @@ app.delete('/api/info/:del', (req, res) => {
 
 app.get('/api', (req, res) => {
     status = jsonfile.readFileSync(statusFile);
+
     console.log('API Fetch from: ' + req.ip);
-    res.json(status);
+    Services.find({}, '', (err, status) => {
+        if(err) {
+            console.log(err);
+        }
+        res.send({
+            status
+        })
+    });
+    //res.json(status);
 });
 
 app.get('/api/info', (req, res) => {
     console.log('API/INFO Fetch from: ' + req.ip);
-    res.json(info.infoTabs);
-})
+    InfoDB.find({}, '' , (err, infoTabs) => {
+        if(err) {
+            console.error(err);
+        }
+        res.send({
+            infoTabs
+        })
+    }).sort({_id:-1})
+});
 
 
 app.listen(PORT, () => console.log('Statuspage running on port: ' + colors.red(PORT)));
