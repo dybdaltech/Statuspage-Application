@@ -9,6 +9,7 @@ const InfoDB = require('./models/Info');
 const Services = require('./models/status');
 const config = require("./configuration/config");
 const system = require('./models/system');
+const chat = require('./models/chat');
 //System is not needed
 const app = express();
 const PORT = config.PORT;
@@ -133,5 +134,31 @@ app.get('/api/info', (req, res) => {//Get all info boxes to display at dashboard
     }).sort({_id:-1})
 });
 
+app.get('/chat/get', (req, res ) => {
+    console.log("Sending Chat to " + req.ip);
+    chat.find({}, '', (err, messages) => {
+        if(err) console.error(err);
+        res.send({
+            messages
+        });
+    }).sort({_id:-1});
+});
+
+app.post('/chat/new', (req, res) => {
+    let chat_name = req.body.sender;
+    let chat_msg = req.body.msg;
+    let new_chat_message = new chat({
+        Sender: chat_name,
+        Message: chat_msg
+    });
+
+    new_chat_message.save((err) => {
+        if(err) console.log(err);
+        res.send({
+            success: true,
+            message: "Chat message succesfully sent!"
+        });
+    });
+});
 
 app.listen(PORT, () => console.log('Statuspage running on port: ' + colors.red(PORT)));
