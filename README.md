@@ -13,3 +13,9 @@ For server.js:
 3. Change config.js inside /configuration too fit your enviroment
 4. Have a front-end ready, I'll release mine when I consider it showable to the public (I'm using VueJS)
 5. node server.js
+
+
+TODO list:
+Add authentication (Passport?)
+Add seperate router folder
+Push front-end (After authentication)
