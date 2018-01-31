@@ -8,17 +8,17 @@ const jsonfile = require("jsonfile");
 const mongoose = require('mongoose');
 var InfoDB = require('./models/Info');
 var Services = require('./models/status');
-
+const config = require("./configuration/config");
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = config.PORT;
 //Middleware:
 app.use(bodyParser.json());
 app.use(cors());
 
 
 //MONGODB Connection
-mongoose.connect('mongodb://172.19.20.69:27017/statuspage');
+mongoose.connect(config.mongoURL);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Database connection error'));
 
