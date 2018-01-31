@@ -61,37 +61,23 @@ db.once('open', (callback) => {
 //ROUTES:
 app.post('/state/:srv', (req, res) => {
     //THIS IS VERY BUGGED, DO NOT USE THIS
-    var stateToChange = req.params.srv;
-    if(stateToChange === "epost"){
-        console.log(colors.green(req.ip + " Set "+stateToChange + " To: "))
-        console.log(req.body.state + "\n" + req.body.color)
-        let objectOne = req.body.state;
-        jsonfile.writeFileSync(statusFile, objectOne, (err) => {
+    var stateToChange = { Name: req.params.srv};
+    console.log(stateToChange);
+    console.log("--------------------------------------------------------");
+    console.log(req.body);
+    let new_State = req.body.state;
+    let new_Color = req.body.color;
+    Services.findOneAndUpdate(stateToChange, {
+        State: new_State,
+        Color: new_Color
+    }, '', (err, srv) => {
+        if (err) {
             console.error(err);
-        });
-        /*
-        status.epost.state = req.body.state;
-        status.epost.color = req.body.color;
-        */
-    }
-    if(stateToChange === "intern"){
-        console.log(colors.green(req.ip + " Set "+stateToChange + " To: "))
-        console.log(req.body.state + "\n" + req.body.color)
-        status.intern.state = req.body.state;
-        status.intern.color = req.body.color;
-    }
-    if(stateToChange === "esa"){
-        console.log(colors.green(req.ip + " Set "+stateToChange + " To: "))
-        console.log(req.body.state + "\n" + req.body.color)
-        status.esa.state = req.body.state;
-        status.esa.color = req.body.color;
-    }
-    if(stateToChange === "helse"){
-        console.log(colors.green(req.ip + " Set "+stateToChange + " To: "))
-        console.log(req.body.state + "\n" + req.body.color)
-        status.helse.state = req.body.state;
-        status.helse.color = req.body.color;
-    }
+            res.send(500, {error: err});
+        }
+        console.log(srv);
+        srv.save();
+    });
 });
 
 
@@ -128,21 +114,13 @@ app.get('/', (req, res) => {
 });
 
 app.delete('/api/info/:del', (req, res) => {
-    objectToDelete = req.params.del;
-    arr = info.infoTabs;
-    console.log(objectToDelete);
-    console.log('                 ');
-    for(a = 0; a < arr.length; a++){
-        console.log(arr[a].title);
-        if(arr[a].title === objectToDelete){
-            console.log('DELETING')
-            arr.splice(a, 1);
-            res.send('Success');
-            return;
-        } else {
-            res.send('Failed to delete object');
+    objectToDelete = { _id: req.params.del};
+    InfoDB.remove(objectToDelete, (err) => {
+        if(err){
+            console.log(err);
+            res.send(500, {error: err});
         }
-    }
+    });
 });
 
 app.get('/api', (req, res) => {
@@ -152,6 +130,7 @@ app.get('/api', (req, res) => {
     Services.find({}, '', (err, status) => {
         if(err) {
             console.log(err);
+            res.send(500, {error: err});
         }
         res.send({
             status
@@ -165,6 +144,7 @@ app.get('/api/info', (req, res) => {
     InfoDB.find({}, '' , (err, infoTabs) => {
         if(err) {
             console.error(err);
+            res.send(500, {error: err});
         }
         res.send({
             infoTabs
