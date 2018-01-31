@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const InfoDB = require('./models/Info');
 const Services = require('./models/status');
 const config = require("./configuration/config");
+const system = require('./models/system');
 
 const app = express();
 const PORT = config.PORT;
@@ -18,7 +19,7 @@ app.use(cors());
 
 //MONGODB Connection
 mongoose.connect(config.mongoURL);
-var db = mongoose.connection;
+let db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Database connection error'));
 
 db.once('open', (callback) => {
@@ -28,7 +29,7 @@ db.once('open', (callback) => {
 
 //ROUTES:
 app.post('/state/:srv', (req, res) => {//Change service state
-    var stateToChange = { Name: req.params.srv};
+    let stateToChange = { Name: req.params.srv};
     console.log(req.ip);
     console.log('-------------------------');
     console.log("Changed " + req.params.srv + ". Too: " + req.body.state + ". With color " + req.body.color);
@@ -49,21 +50,23 @@ app.post('/state/:srv', (req, res) => {//Change service state
 
 
 app.post('/info/create', (req, res) => { //Create new information box, returns success
-    let db = req.db;
+    
+    let db = req.db; //Honestly got no idea on why this is needed
     let info_title = req.body.infoTitle;
     let info_description= req.body.infoText;
     let info_color = req.body.infoColor;
+    //Log the output to console
     console.log(req.ip);
     console.log('-------------------------');
     console.log("Created " + info_title + ", with info " + info_description + ". With color " + info_color);
-    let newInfo = new InfoDB({
+    let new_Info = new InfoDB({
         title: info_title,
         Text: info_description,
         Color: info_color,
         Date: "null"
     });
 
-    newInfo.save((err) => {
+    new_Info.save((err) => {
         if (err) {
             console.error(err);
         }
@@ -103,7 +106,18 @@ app.get('/api', (req, res) => {//Get all service states for dashboard. Returns 5
             status
         })
     });
-    //res.json(status);
+    let get_ip = req.ip;
+    let get_time = new Date().toLocaleDateString();
+    let get_Info = new system({
+        Name: "",
+        IpAdress: get_ip,
+        Time: get_time
+    });
+    get_Info.save((err) => {
+        if(err) {
+            console.error(err);
+        }
+    });
 });
 
 app.get('/api/info', (req, res) => {//Get all info boxes to display at dashboard!
