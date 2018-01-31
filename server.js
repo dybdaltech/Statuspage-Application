@@ -1,13 +1,12 @@
+//Package dependencies:
 const express = require('express');
 const bodyParser = require('body-parser');
 const colors = require('colors');
-const path = require('path');
 const cors = require('cors');
-const fs = require('fs');
-const jsonfile = require("jsonfile");
 const mongoose = require('mongoose');
-var InfoDB = require('./models/Info');
-var Services = require('./models/status');
+//File dependencies:
+const InfoDB = require('./models/Info');
+const Services = require('./models/status');
 const config = require("./configuration/config");
 
 const app = express();
