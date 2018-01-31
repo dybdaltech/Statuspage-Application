@@ -9,7 +9,7 @@ const InfoDB = require('./models/Info');
 const Services = require('./models/status');
 const config = require("./configuration/config");
 const system = require('./models/system');
-
+//System is not needed
 const app = express();
 const PORT = config.PORT;
 //Middleware:
