@@ -16,6 +16,6 @@ For server.js:
 
 
 TODO list:
-Add authentication (Passport?)
-Add seperate router folder
-Push front-end (After authentication)
+* Add authentication (Passport?)
+* Add seperate router folder
+* Push front-end (After authentication)
