@@ -31,7 +31,7 @@ app.post('/state/:srv', (req, res) => {//Change service state
     var stateToChange = { Name: req.params.srv};
     console.log(req.ip);
     console.log('-------------------------');
-    console.log("Changed " + stateToChange + " Too " + req.body.state + ". With color" + req.body.color);
+    console.log("Changed " + req.params.srv + ". Too: " + req.body.state + ". With color " + req.body.color);
     let new_State = req.body.state;
     let new_Color = req.body.color;
     Services.findOneAndUpdate(stateToChange, {
@@ -55,7 +55,7 @@ app.post('/info/create', (req, res) => { //Create new information box, returns s
     let info_color = req.body.infoColor;
     console.log(req.ip);
     console.log('-------------------------');
-    console.log("Created " + info_title + ", with info " + info_description + ". With color" + info_color);
+    console.log("Created " + info_title + ", with info " + info_description + ". With color " + info_color);
     let newInfo = new InfoDB({
         title: info_title,
         Text: info_description,
