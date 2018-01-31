@@ -1,8 +1,7 @@
 # Statuspage-Back-end
 Back end for statuspage application at work
 
-
-Server1.js:
+for Old_server.js :
 1. Add folder "Status/"
 2. Add status.json and info.json
 3. Run server.js
