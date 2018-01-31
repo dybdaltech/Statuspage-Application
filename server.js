@@ -12,45 +12,12 @@ var Services = require('./models/status');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-
+//Middleware:
 app.use(bodyParser.json());
 app.use(cors());
 
-/*
-status = {
-    epost:{
-        name:'epost',
-        state:"Unknown",
-        color:""
-    },
-    intern:{
-        name:'intern',
-        state:"Unknown",
-        color:""
-    },
-    esa:{
-        name:'esa',
-        state:"Unknown",
-        color:""
-    },
-    helse:{
-        name:'helse',
-        state:"Unknown",
-        color:""
-    }
-};
-*/
-info = {
-    info:false,
-    infoTabs:[
-    ]
-};
-//JSON THINGS:
-let statusFile = './status.json';
-let epostFile = './status/epost.json';
-//statusFile = JSON.parse(statusFile);
 
-//MONGODB THINGS
+//MONGODB Connection
 mongoose.connect('mongodb://172.19.20.69:27017/statuspage');
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Database connection error'));
@@ -58,13 +25,14 @@ db.on('error', console.error.bind(console, 'Database connection error'));
 db.once('open', (callback) => {
     console.log(colors.green('Database connection success'));
 });
+
+
 //ROUTES:
-app.post('/state/:srv', (req, res) => {
-    //THIS IS VERY BUGGED, DO NOT USE THIS
+app.post('/state/:srv', (req, res) => {//Change service state
     var stateToChange = { Name: req.params.srv};
-    console.log(stateToChange);
-    console.log("--------------------------------------------------------");
-    console.log(req.body);
+    console.log(req.ip);
+    console.log('-------------------------');
+    console.log("Changed " + stateToChange + " Too " + req.body.state + ". With color" + req.body.color);
     let new_State = req.body.state;
     let new_Color = req.body.color;
     Services.findOneAndUpdate(stateToChange, {
@@ -81,13 +49,14 @@ app.post('/state/:srv', (req, res) => {
 });
 
 
-app.post('/info/create', (req, res) => {
-    console.log(colors.yellow("INFO CREATE"));
+app.post('/info/create', (req, res) => { //Create new information box, returns success
     let db = req.db;
-
     let info_title = req.body.infoTitle;
     let info_description= req.body.infoText;
     let info_color = req.body.infoColor;
+    console.log(req.ip);
+    console.log('-------------------------');
+    console.log("Created " + info_title + ", with info " + info_description + ". With color" + info_color);
     let newInfo = new InfoDB({
         title: info_title,
         Text: info_description,
@@ -107,13 +76,13 @@ app.post('/info/create', (req, res) => {
 
 })
 
-app.get('/', (req, res) => {
+app.get('/', (req, res) => {//Redirects to :8080 for front-end
     console.log("Get from: "+ req.ip);
     res.redirect('http://localhost:8080');
     res.send('Redirected too correct site!');
 });
 
-app.delete('/api/info/:del', (req, res) => {
+app.delete('/api/info/:del', (req, res) => {//Delete an information box!
     objectToDelete = { _id: req.params.del};
     InfoDB.remove(objectToDelete, (err) => {
         if(err){
@@ -123,8 +92,7 @@ app.delete('/api/info/:del', (req, res) => {
     });
 });
 
-app.get('/api', (req, res) => {
-    status = jsonfile.readFileSync(statusFile);
+app.get('/api', (req, res) => {//Get all service states for dashboard. Returns 500 err on err
 
     console.log('API Fetch from: ' + req.ip);
     Services.find({}, '', (err, status) => {
@@ -139,7 +107,7 @@ app.get('/api', (req, res) => {
     //res.json(status);
 });
 
-app.get('/api/info', (req, res) => {
+app.get('/api/info', (req, res) => {//Get all info boxes to display at dashboard!
     console.log('API/INFO Fetch from: ' + req.ip);
     InfoDB.find({}, '' , (err, infoTabs) => {
         if(err) {
