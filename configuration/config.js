@@ -1,5 +1,5 @@
 let config = {};
-config.version = "0.9.2";
+config.version = "1..2";
 
 
 //Change for your enviroment:
