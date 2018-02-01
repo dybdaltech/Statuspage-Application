@@ -5,7 +5,8 @@ let Schema = mongoose.Schema;
 let ChatSchema = new Schema({
     Sender: String,
     Message: String,
-    Sollution: String
+    Sollution: String,
+    Solver: String
 });
 
 let Chat = mongoose.model("chat", ChatSchema);
