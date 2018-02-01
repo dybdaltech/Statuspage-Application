@@ -9,6 +9,7 @@ const InfoDB = require('./models/Info');
 const Services = require('./models/status');
 const config = require("./configuration/config");
 const system = require('./models/system');
+const Chat = require('./models/chat');
 //System is not needed
 
 const app = express();
@@ -134,5 +135,59 @@ app.get('/api/info', (req, res) => {//Get all info boxes to display at dashboard
     }).sort({_id:-1})
 });
 
+app.get('/chat/get', (req, res ) => {
+    console.log("Sending Chat to " + req.ip);
+    Chat.find({}, '', (err, messages) => {
+        if(err) console.error(err);
+        res.send({
+            messages
+        });
+    }).sort({_id:-1});
+});
 
+app.get('/chat/get/:cget', (req, res) => {
+    msg_id = req.params.cget;
+    console.log('Entered edit message: ' + req.ip);
+    Chat.findById(msg_id, (err, msg) => {
+        if(err) {
+            console.log('could not find message.');
+            res.send('Could not find ID');
+        }
+        res.send({msg})
+    });
+
+})
+app.post('/chat/new', (req, res) => {
+    let chat_name = req.body.sender;
+    let chat_msg = req.body.msg;
+    let new_chat_message = new Chat({
+        Sender: chat_name,
+        Message: chat_msg
+    });
+
+    new_chat_message.save((err) => {
+        if(err) console.log(err);
+        res.send({
+            success: true,
+            message: "Chat message succesfully sent!"
+        });
+    });
+});
+
+app.post('/chat/edit/:id', (req, res) => {
+    //console.log(id);
+    let chat_change = { _id: req.params.id};
+    let chat_solve = req.body.msg;
+    let chat_solver = req.body.sender;
+    Chat.findOneAndUpdate(chat_change, {
+        Sollution: chat_solve,
+        Solver: chat_solver
+    }, '', (err, cedit) => {
+        if(err) {
+            console.log(err);
+            res.send(err);
+        }
+        cedit.save();
+    });
+});
 app.listen(PORT, () => console.log('Statuspage running on port: ' + colors.red(PORT)));
