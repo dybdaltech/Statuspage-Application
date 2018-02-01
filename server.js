@@ -10,6 +10,7 @@ const Services = require('./models/status');
 const config = require("./configuration/config");
 const system = require('./models/system');
 //System is not needed
+
 const app = express();
 const PORT = config.PORT;
 //Middleware:
@@ -80,8 +81,8 @@ app.post('/info/create', (req, res) => { //Create new information box, returns s
 
 app.get('/', (req, res) => {//Redirects to :8080 for front-end
     console.log("Get from: "+ req.ip);
-    res.redirect('http://localhost:8080');
-    res.send('Redirected too correct site!');
+    //res.redirect('http://localhost:8080');
+    res.send('Wrong site. Go to port 8080 instead.');
 });
 
 app.delete('/api/info/:del', (req, res) => {//Delete an information box!
