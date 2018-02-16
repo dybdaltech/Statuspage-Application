@@ -15,6 +15,10 @@ TODO list:
 * Add seperate router folder            | X
 * Push front-end (After authentication) | O
 
+- [x] Add seperate router folder
+- [ ] Add authentication support
+- [ ] Push front-end, will do sometime after authentication has been added
+
 
 For discord notifications:
 1. Go to your Discord server, select the channel and press the little cogwheel ![Discord picture](https://imgur.com/a/HZJbL)
