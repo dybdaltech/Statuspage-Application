@@ -19,3 +19,7 @@ TODO list:
 * Add authentication (Passport?)
 * Add seperate router folder
 * Push front-end (After authentication)
+
+
+For discord notifications:
+1. Go to you
