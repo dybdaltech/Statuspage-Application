@@ -16,7 +16,18 @@ const PORT = config.PORT;
 app.use(bodyParser.json());
 app.use(cors());
 
-
+function discord_notify (msg) {
+    let discord_url = "" //Your Discord webhook URL
+    notify_body = {
+        "content":msg
+    }
+    request.post({url: discord_url, formData: notify_body}, (err, res, body) => {
+        if (err) {
+            console.error('Failed to notify on Discord', err);
+        }
+        console.log('Notified on Discord', body);
+    })
+}
 //MONGODB Connection
 mongoose.connect(config.mongoURL);
 let db = mongoose.connection;
@@ -30,4 +41,8 @@ db.once('open', (callback) => {
 app.use('/', api_router);
 
 //Start server
-app.listen(PORT, () => console.log('Statuspage API running on port: ' + colors.red(PORT)));
+app.listen(PORT, () => {
+    startedMessage = 'API running on port: ';
+    console.log(startedMessage + colors.red(PORT));
+    discord_notify(startedMessage + PORT);
+});

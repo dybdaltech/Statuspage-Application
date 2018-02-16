@@ -1,11 +1,27 @@
 const express = require('express');
 const router = express.Router();
+const request = require('request');
 //File dependencies:
 const InfoDB = require('../models/Info');
 const Services = require('../models/status');
 const config = require("../configuration/config");
 const system = require('../models/system');
 const Chat = require('../models/chat');
+
+//Some middleware things
+function discord_notify (msg) {
+    let discord_url = "" //Your Discord webhook URL
+    notify_body = {
+        "content":msg
+    }
+    request.post({url: discord_url, formData: notify_body}, (err, res, body) => {
+        if (err) {
+            console.error('Failed to notify on Discord', err);
+        }
+        console.log('Notified on Discord', body);
+    })
+}
+
 
 //ROUTES:
 router.post('/state/:srv', (req, res) => {//Change service state
@@ -22,10 +38,15 @@ router.post('/state/:srv', (req, res) => {//Change service state
         if (err) {
             console.error(err);
             res.send(500, {error: err});
+            discord_notify(err);
+        } else {
+            console.log(srv);
+            srv.save();
+            discord_notify(srv);
         }
-        console.log(srv);
-        srv.save();
+
     });
+
 });
 
 
@@ -49,13 +70,18 @@ router.post('/info/create', (req, res) => { //Create new information box, return
     new_Info.save((err) => {
         if (err) {
             console.error(err);
+            let errorstring = "Database error when creating information box: " + err;
+            discord_notify(errorstring);
+        } else {
+            n_msg = req.ip + " Created " + info_title + ", with info " + info_description + ". With color " + info_color;
+            discord_notify(n_msg)
+            res.send({
+                success: true,
+                message: "Infobox saved succesfully!"
+            });
         }
-        res.send({
-            success: true,
-            message: "Infobox saved succesfully!"
-        });
-    });
 
+    });
 })
 
 router.get('/', (req, res) => {//Redirects to :8080 for front-end
@@ -70,6 +96,11 @@ router.delete('/api/info/:del', (req, res) => {//Delete an information box!
         if(err){
             console.log(err);
             res.send(500, {error: err});
+            n_msg = req.ip +" tried to delete. Error deleting " + req.params.del;
+            discord_notify(n_msg);
+        } else {
+            n_msg = req.ip + " Deleted " + req.params.del;
+            discord_notify(n_msg);
         }
     });
 });
@@ -81,11 +112,18 @@ router.get('/api', (req, res) => {//Get all service states for dashboard. Return
         if(err) {
             console.log(err);
             res.send(500, {error: err});
+            n_msg = "Error db.find /api: " + req.ip;
+            discord_notify(n_msg);
+        } else {
+            res.send({
+                status
+            })
+            n_msg = "Sent API to: " + req.ip;
+            discord_notify(n_msg);
         }
-        res.send({
-            status
-        })
+
     });
+
     let get_ip = req.ip;
     let get_time = new Date().toLocaleDateString();
     let get_Info = new system({
@@ -106,10 +144,15 @@ router.get('/api/info', (req, res) => {//Get all info boxes to display at dashbo
         if(err) {
             console.error(err);
             res.send(500, {error: err});
+            errorstring = "ERROR db.find api/info: " + err;
+            discord_notify(errorstring);
+        } else {      
+            res.send({
+                infoTabs
+            });
+            n_msg = "Sent api/info to: " + req.ip;
+            discord_notify(n_msg);
         }
-        res.send({
-            infoTabs
-        })
     }).sort({_id:-1})
 });
 
