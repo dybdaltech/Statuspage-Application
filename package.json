@@ -4,7 +4,8 @@
   "description": "Statuspage for Nesna kommune",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node dev.js"
   },
   "keywords": [
     "Statuspage"
@@ -16,6 +17,10 @@
     "colors": "^1.1.2",
     "cors": "^2.8.4",
     "express": "^4.16.2",
-    "mongoose": "^5.0.2"
+    "mongoose": "^5.0.2",
+    "request": "^2.83.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.15.0"
   }
 }
