@@ -10,7 +10,11 @@ const Chat = require('../models/chat');
 
 //Some middleware things
 function discord_notify (msg) {
+<<<<<<< HEAD
     let discord_url = "https://discordapp.com/api/webhooks/413995250172952577/FvWuLbsfuHGj7qCxricDLFuXI-k8pJjYtZYHmFkuCvwXObBQVOOCTTYlwmKQ235hcA6z" //Your Discord webhook URL
+=======
+    let discord_url = "" //Your Discord webhook URL
+>>>>>>> 9350b4aacfc192e4698827b666ceadc50d28211b
     notify_body = {
         "content":msg
     }
@@ -29,7 +33,10 @@ router.post('/state/:srv', (req, res) => {//Change service state
     console.log(req.ip);
     console.log('-------------------------');
     console.log("Changed " + req.params.srv + ". Too: " + req.body.state + ". With color " + req.body.color);
+<<<<<<< HEAD
     let n_msg = "Changed " + req.params.srv + ". Too: " + req.body.state + ". With color " + req.body.color;
+=======
+>>>>>>> 9350b4aacfc192e4698827b666ceadc50d28211b
     let new_State = req.body.state;
     let new_Color = req.body.color;
     Services.findOneAndUpdate(stateToChange, {
@@ -43,7 +50,11 @@ router.post('/state/:srv', (req, res) => {//Change service state
         } else {
             console.log(srv);
             srv.save();
+<<<<<<< HEAD
             discord_notify(n_msg);
+=======
+            discord_notify(srv);
+>>>>>>> 9350b4aacfc192e4698827b666ceadc50d28211b
         }
 
     });
@@ -107,6 +118,7 @@ router.delete('/api/info/:del', (req, res) => {//Delete an information box!
 });
 
 router.get('/api', (req, res) => {//Get all service states for dashboard. Returns 500 err on err
+<<<<<<< HEAD
     let get_ip = req.ip;
     let get_time = new Date().toLocaleDateString();
     let get_Info = new system({
@@ -114,6 +126,9 @@ router.get('/api', (req, res) => {//Get all service states for dashboard. Return
         IpAdress: get_ip,
         Time: get_time
     });
+=======
+
+>>>>>>> 9350b4aacfc192e4698827b666ceadc50d28211b
     console.log('API Fetch from: ' + req.ip);
     Services.find({}, '', (err, status) => {
         if(err) {
@@ -124,19 +139,38 @@ router.get('/api', (req, res) => {//Get all service states for dashboard. Return
         } else {
             res.send({
                 status
+<<<<<<< HEAD
             });
             get_Info.save((err) => {
                 if(err) {
                     console.error(err);
                 }
             });
+=======
+            })
+>>>>>>> 9350b4aacfc192e4698827b666ceadc50d28211b
             n_msg = "Sent API to: " + req.ip;
             discord_notify(n_msg);
         }
 
     });
 
+<<<<<<< HEAD
 
+=======
+    let get_ip = req.ip;
+    let get_time = new Date().toLocaleDateString();
+    let get_Info = new system({
+        Name: "",
+        IpAdress: get_ip,
+        Time: get_time
+    });
+    get_Info.save((err) => {
+        if(err) {
+            console.error(err);
+        }
+    });
+>>>>>>> 9350b4aacfc192e4698827b666ceadc50d28211b
 });
 
 router.get('/api/info', (req, res) => {//Get all info boxes to display at dashboard!
@@ -159,8 +193,11 @@ router.get('/api/info', (req, res) => {//Get all info boxes to display at dashbo
 
 router.get('/chat/get', (req, res ) => {
     console.log("Sending Chat to " + req.ip);
+<<<<<<< HEAD
     n_msg = req.ip + " Entered chat message. <@&414070526755995658>"
     discord_notify(n_msg);
+=======
+>>>>>>> 9350b4aacfc192e4698827b666ceadc50d28211b
     Chat.find({}, '', (err, messages) => {
         if(err) console.error(err);
         res.send({
@@ -172,8 +209,11 @@ router.get('/chat/get', (req, res ) => {
 router.get('/chat/get/:cget', (req, res) => {
     msg_id = req.params.cget;
     console.log('Entered edit message: ' + req.ip);
+<<<<<<< HEAD
     n_msg = req.ip + " Entered chat message. <@&414070526755995658>"
     discord_notify(n_msg);
+=======
+>>>>>>> 9350b4aacfc192e4698827b666ceadc50d28211b
     Chat.findById(msg_id, (err, msg) => {
         if(err) {
             console.log('could not find message.');
@@ -190,8 +230,12 @@ router.post('/chat/new', (req, res) => {
         Sender: chat_name,
         Message: chat_msg
     });
+<<<<<<< HEAD
     n_msg = "New chat message! <@&414070526755995658>. "+chat_msg; 
     discord_notify(n_msg);
+=======
+
+>>>>>>> 9350b4aacfc192e4698827b666ceadc50d28211b
     new_chat_message.save((err) => {
         if(err) console.log(err);
         res.send({
