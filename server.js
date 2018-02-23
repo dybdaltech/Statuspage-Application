@@ -8,11 +8,8 @@ const request = require('request'); //Only for notifications..
 //File dependencies:
 const config = require("./configuration/config");
 const api_router = require('./routes/api');
-<<<<<<< HEAD
-//New comment
-=======
+const discordConfig = require('./configuration/discord');
 
->>>>>>> 9350b4aacfc192e4698827b666ceadc50d28211b
 //System is not needed
 const app = express();
 const PORT = config.PORT;
@@ -21,11 +18,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 function discord_notify (msg) {
-<<<<<<< HEAD
-    let discord_url = "https://discordapp.com/api/webhooks/413995250172952577/FvWuLbsfuHGj7qCxricDLFuXI-k8pJjYtZYHmFkuCvwXObBQVOOCTTYlwmKQ235hcA6z" //Your Discord webhook URL
-=======
-    let discord_url = "" //Your Discord webhook URL
->>>>>>> 9350b4aacfc192e4698827b666ceadc50d28211b
+    let discord_url = discordConfig.hookURL; //Your Discord webhook URL
     notify_body = {
         "content":msg
     }
@@ -53,9 +46,5 @@ app.listen(PORT, () => {
     startedMessage = 'API running on port: ';
     console.log(startedMessage + colors.red(PORT));
     discord_notify(startedMessage + PORT);
-<<<<<<< HEAD
 });
 
-=======
-});
->>>>>>> 9350b4aacfc192e4698827b666ceadc50d28211b
