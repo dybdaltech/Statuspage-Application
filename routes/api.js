@@ -10,7 +10,7 @@ const Chat = require('../models/chat');
 
 //Some middleware things
 function discord_notify (msg) {
-    let discord_url = "" //Your Discord webhook URL
+    let discord_url = "https://discordapp.com/api/webhooks/413995250172952577/FvWuLbsfuHGj7qCxricDLFuXI-k8pJjYtZYHmFkuCvwXObBQVOOCTTYlwmKQ235hcA6z" //Your Discord webhook URL
     notify_body = {
         "content":msg
     }
@@ -29,6 +29,7 @@ router.post('/state/:srv', (req, res) => {//Change service state
     console.log(req.ip);
     console.log('-------------------------');
     console.log("Changed " + req.params.srv + ". Too: " + req.body.state + ". With color " + req.body.color);
+    let notify_message = "Changed " + req.params.srv + ". Too: " + req.body.state + ". With color " + req.body.color;
     let new_State = req.body.state;
     let new_Color = req.body.color;
     Services.findOneAndUpdate(stateToChange, {
@@ -42,7 +43,7 @@ router.post('/state/:srv', (req, res) => {//Change service state
         } else {
             console.log(srv);
             srv.save();
-            discord_notify(srv);
+            discord_notify(notify_message);
         }
 
     });
@@ -106,7 +107,13 @@ router.delete('/api/info/:del', (req, res) => {//Delete an information box!
 });
 
 router.get('/api', (req, res) => {//Get all service states for dashboard. Returns 500 err on err
-
+    let get_ip = req.ip;
+    let get_time = new Date().toLocaleDateString();
+    let get_Info = new system({
+        Name: "",
+        IpAdress: get_ip,
+        Time: get_time
+    });
     console.log('API Fetch from: ' + req.ip);
     Services.find({}, '', (err, status) => {
         if(err) {
@@ -117,25 +124,18 @@ router.get('/api', (req, res) => {//Get all service states for dashboard. Return
         } else {
             res.send({
                 status
-            })
+            });
+            get_Info.save((err) => {
+                if(err) {
+                    console.error(err);
+                }
+            });
             n_msg = "Sent API to: " + req.ip;
             discord_notify(n_msg);
         }
 
     });
 
-    let get_ip = req.ip;
-    let get_time = new Date().toLocaleDateString();
-    let get_Info = new system({
-        Name: "",
-        IpAdress: get_ip,
-        Time: get_time
-    });
-    get_Info.save((err) => {
-        if(err) {
-            console.error(err);
-        }
-    });
 });
 
 router.get('/api/info', (req, res) => {//Get all info boxes to display at dashboard!

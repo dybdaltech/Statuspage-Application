@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 function discord_notify (msg) {
-    let discord_url = "" //Your Discord webhook URL
+    let discord_url = "https://discordapp.com/api/webhooks/413995250172952577/FvWuLbsfuHGj7qCxricDLFuXI-k8pJjYtZYHmFkuCvwXObBQVOOCTTYlwmKQ235hcA6z" //Your Discord webhook URL
     notify_body = {
         "content":msg
     }
