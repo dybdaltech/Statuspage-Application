@@ -2,6 +2,10 @@ var nodemon = require('nodemon');
 
 nodemon({
   script: 'server.js',
+  watch: [
+    "server.js",
+    "client/client.js"
+  ],
   ext: 'js json'
 });
 

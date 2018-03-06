@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node dev.js"
+    "dev": "node dev.js",
+    "start": "concurrently \"node client/client.js\" \"node server.js\" "
   },
   "keywords": [
     "Statuspage"
@@ -15,6 +16,7 @@
   "dependencies": {
     "body-parser": "^1.18.2",
     "colors": "^1.1.2",
+    "concurrently": "^3.5.1",
     "cors": "^2.8.4",
     "express": "^4.16.2",
     "mongoose": "^5.0.2",
