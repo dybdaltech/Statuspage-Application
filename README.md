@@ -2,19 +2,19 @@
 Back end for statuspage application at work
 
 
-For server.js:
+Installation and start:
 1. Have a MongoDB ready
 2. Inside project folder: npm install
 3. Change config.js inside /configuration too fit your enviroment
-4. Have a front-end ready, I'll release mine when I consider it showable to the public (I'm using VueJS)
-5. node server.js
+4. npm start
 
 
 TODO list:
 - [x] Add seperate router folder
 - [ ] Add authentication support
-- [ ] Push front-end, will do sometime after authentication has been added
-
+- [X] Push front-end (Made in VueJs)
+- [ ] Clean up the code / refactor 
+- [ ] put everything Discord inside It's own project
 
 For discord notifications:
 1. Go to your Discord server, select the channel and press the little cogwheel ![Discord picture](https://imgur.com/a/HZJbL)
@@ -24,7 +24,4 @@ For discord notifications:
 
 
 
-for Old_server.js :
-1. Add folder "Status/"
-2. Add status.json and info.json
-3. Run server.js
+Old server is no longer supported and removed from the repository.
