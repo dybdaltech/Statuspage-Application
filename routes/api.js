@@ -11,11 +11,7 @@ const discordConfig = require('../configuration/discord');
 
 //Some middleware things
 function discord_notify (msg) {
-<<<<<<< HEAD
-    let discord_url = "https://discordapp.com/api/webhooks/413995250172952577/FvWuLbsfuHGj7qCxricDLFuXI-k8pJjYtZYHmFkuCvwXObBQVOOCTTYlwmKQ235hcA6z" //Your Discord webhook URL
-=======
     let discord_url = discordConfig.hookURL; //Your Discord webhook URL
->>>>>>> 645882cb5a85d0b3f0ab6be6c3f58bd015738e68
     notify_body = {
         "content":msg
     }
@@ -34,11 +30,7 @@ router.post('/state/:srv', (req, res) => {//Change service state
     console.log(req.ip);
     console.log('-------------------------');
     console.log("Changed " + req.params.srv + ". Too: " + req.body.state + ". With color " + req.body.color);
-<<<<<<< HEAD
-    let notify_message = "Changed " + req.params.srv + ". Too: " + req.body.state + ". With color " + req.body.color;
-=======
     let n_msg = "Changed " + req.params.srv + ". Too: " + req.body.state + ". With color " + req.body.color;
->>>>>>> 645882cb5a85d0b3f0ab6be6c3f58bd015738e68
     let new_State = req.body.state;
     let new_Color = req.body.color;
     Services.findOneAndUpdate(stateToChange, {
@@ -52,11 +44,7 @@ router.post('/state/:srv', (req, res) => {//Change service state
         } else {
             console.log(srv);
             srv.save();
-<<<<<<< HEAD
-            discord_notify(notify_message);
-=======
             discord_notify(n_msg);
->>>>>>> 645882cb5a85d0b3f0ab6be6c3f58bd015738e68
         }
 
     });
