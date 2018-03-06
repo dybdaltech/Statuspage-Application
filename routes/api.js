@@ -7,10 +7,15 @@ const Services = require('../models/status');
 const config = require("../configuration/config");
 const system = require('../models/system');
 const Chat = require('../models/chat');
+const discordConfig = require('../configuration/discord');
 
 //Some middleware things
 function discord_notify (msg) {
+<<<<<<< HEAD
     let discord_url = "https://discordapp.com/api/webhooks/413995250172952577/FvWuLbsfuHGj7qCxricDLFuXI-k8pJjYtZYHmFkuCvwXObBQVOOCTTYlwmKQ235hcA6z" //Your Discord webhook URL
+=======
+    let discord_url = discordConfig.hookURL; //Your Discord webhook URL
+>>>>>>> 645882cb5a85d0b3f0ab6be6c3f58bd015738e68
     notify_body = {
         "content":msg
     }
@@ -29,7 +34,11 @@ router.post('/state/:srv', (req, res) => {//Change service state
     console.log(req.ip);
     console.log('-------------------------');
     console.log("Changed " + req.params.srv + ". Too: " + req.body.state + ". With color " + req.body.color);
+<<<<<<< HEAD
     let notify_message = "Changed " + req.params.srv + ". Too: " + req.body.state + ". With color " + req.body.color;
+=======
+    let n_msg = "Changed " + req.params.srv + ". Too: " + req.body.state + ". With color " + req.body.color;
+>>>>>>> 645882cb5a85d0b3f0ab6be6c3f58bd015738e68
     let new_State = req.body.state;
     let new_Color = req.body.color;
     Services.findOneAndUpdate(stateToChange, {
@@ -43,7 +52,11 @@ router.post('/state/:srv', (req, res) => {//Change service state
         } else {
             console.log(srv);
             srv.save();
+<<<<<<< HEAD
             discord_notify(notify_message);
+=======
+            discord_notify(n_msg);
+>>>>>>> 645882cb5a85d0b3f0ab6be6c3f58bd015738e68
         }
 
     });
@@ -158,6 +171,8 @@ router.get('/api/info', (req, res) => {//Get all info boxes to display at dashbo
 
 router.get('/chat/get', (req, res ) => {
     console.log("Sending Chat to " + req.ip);
+    n_msg = req.ip + " Entered chat message. <@&414070526755995658>"
+    discord_notify(n_msg);
     Chat.find({}, '', (err, messages) => {
         if(err) console.error(err);
         res.send({
@@ -169,6 +184,8 @@ router.get('/chat/get', (req, res ) => {
 router.get('/chat/get/:cget', (req, res) => {
     msg_id = req.params.cget;
     console.log('Entered edit message: ' + req.ip);
+    n_msg = req.ip + " Entered chat message. <@&414070526755995658>"
+    discord_notify(n_msg);
     Chat.findById(msg_id, (err, msg) => {
         if(err) {
             console.log('could not find message.');
@@ -185,7 +202,8 @@ router.post('/chat/new', (req, res) => {
         Sender: chat_name,
         Message: chat_msg
     });
-
+    n_msg = "New chat message! <@&414070526755995658>. "+chat_msg; 
+    discord_notify(n_msg);
     new_chat_message.save((err) => {
         if(err) console.log(err);
         res.send({

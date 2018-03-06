@@ -64,3 +64,5 @@ typings/
 status/
 views/
 status.json
+
+configuration/discord.js

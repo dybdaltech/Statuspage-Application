@@ -1,11 +1,6 @@
 # Statuspage-Back-end
 Back end for statuspage application at work
 
-for Old_server.js :
-1. Add folder "Status/"
-2. Add status.json and info.json
-3. Run server.js
-
 
 For server.js:
 1. Have a MongoDB ready
@@ -16,10 +11,20 @@ For server.js:
 
 
 TODO list:
-* Add authentication (Passport?)
-* Add seperate router folder
-* Push front-end (After authentication)
+- [x] Add seperate router folder
+- [ ] Add authentication support
+- [ ] Push front-end, will do sometime after authentication has been added
 
 
 For discord notifications:
-1. Go to you
+1. Go to your Discord server, select the channel and press the little cogwheel ![Discord picture](https://imgur.com/a/HZJbL)
+2. Click create webhook ![Discord picture create](https://imgur.com/bCGctjA)
+3. Fill in a name and desired image, copy the webhook URL
+4. Paste the webhook URL in the "discord_notify" functions.
+
+
+
+for Old_server.js :
+1. Add folder "Status/"
+2. Add status.json and info.json
+3. Run server.js
